@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.autoai.android.fotaframework.MainActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/startServiceBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Start Service" />
+
+            <Button
+                android:id="@+id/stopServiceBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Stop Service" />
+
+            <Button
+                android:id="@+id/setMobileNetworkDownloadBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="setMobileNetworkDownload"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/setMobileNetworkWaitBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="setMobileNetworkWait"
+                android:visibility="visible" />
+
+            <Button
+                android:id="@+id/reportUpgradeResultBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Completed Report Upgrade Result"
+                android:visibility="visible" />
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:text="Hello World!" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
+
