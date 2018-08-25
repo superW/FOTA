@@ -326,6 +326,7 @@ public class FotaService extends Service implements MFOTAListener {
 
     /**
      * 把json转成对象类
+     *
      * @param configInfo
      */
     private void analysisConfig(String configInfo) {
@@ -341,7 +342,7 @@ public class FotaService extends Service implements MFOTAListener {
             }
 
             JSONArray ja = jo.getJSONArray("modelInfos");
-            for (int i = 0; i < ja.length(); i ++) {
+            for (int i = 0; i < ja.length(); i++) {
                 JSONObject jsonObject = ja.getJSONObject(i);
 
                 FOTAModelInfo fOTAModelInfo = new FOTAModelInfo();
@@ -375,7 +376,7 @@ public class FotaService extends Service implements MFOTAListener {
      */
     private void collectDeviceInfo() {
 
-        for (int i = 0; i < mFOTAModelInfoList.size(); i ++) {
+        for (int i = 0; i < mFOTAModelInfoList.size(); i++) {
             FOTAModelInfo fotaModelInfo = mFOTAModelInfoList.get(i);
             String modelName = fotaModelInfo.getModelName();
             int modelDefVersion = fotaModelInfo.getModelCurrentVersion();

@@ -64,10 +64,10 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onDownloading(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
-                        String printProgress = "onDownloading --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress*100);
+                        String printProgress = "onDownloading --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress * 100);
                         appendText(printProgress);
                         if (LogManager.isLoggable()) {
-                            LogManager.e(TAG, "onDownloading --> progress=" + (progress*100) + ", modelInfo=" + fotaAidlModelInfo);
+                            LogManager.e(TAG, "onDownloading --> progress=" + (progress * 100) + ", modelInfo=" + fotaAidlModelInfo);
                         }
                     }
 
@@ -79,10 +79,10 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onInstalling(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
-                        String printProgress = "onInstalling --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress*100);
+                        String printProgress = "onInstalling --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress * 100);
                         appendText(printProgress);
                         if (LogManager.isLoggable()) {
-                            LogManager.e(TAG, "onInstalling --> progress=" + (progress*100) + ", modelInfo=" + fotaAidlModelInfo);
+                            LogManager.e(TAG, "onInstalling --> progress=" + (progress * 100) + ", modelInfo=" + fotaAidlModelInfo);
                         }
                     }
                 });

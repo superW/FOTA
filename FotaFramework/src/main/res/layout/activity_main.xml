@@ -85,9 +85,9 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fadeScrollbars="false"
             android:scrollbars="vertical"
             android:text=""
-            android:fadeScrollbars="false"
             android:textIsSelectable="true" />
     </ScrollView>
 
