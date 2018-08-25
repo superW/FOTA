@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
-import android.util.Log;
 
 import com.autoai.android.aidl.FotaAidlListener;
 import com.autoai.android.aidl.FotaAidlModelInfo;
 import com.autoai.android.aidl.IFotaAidlInterface;
+import com.autoai.android.utils.LogManager;
 
 import java.util.List;
 
@@ -21,7 +21,7 @@ import java.util.List;
 
 public class FotaServiceManager {
 
-    private static final String TAG = "FotaServiceManager";
+    private static final String TAG = "FotaApp";
 
     private static final String serviceClassName = "com.autoai.android.fotaframework.FotaService";
 
@@ -42,7 +42,9 @@ public class FotaServiceManager {
                     fotaAidl.setFotaListener(new FotaAidlListener.Stub() {
                         @Override
                         public void onUpgrade(List<FotaAidlModelInfo> modelInfos) throws RemoteException {
-                            Log.e(TAG, "onUpgrade--modelInfos=" + modelInfos);
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "onUpgrade --> modelList=" + modelInfos);
+                            }
                             if (mFotaListener != null) {
                                 mFotaListener.onUpgrade(modelInfos);
                             }
@@ -50,7 +52,9 @@ public class FotaServiceManager {
 
                         @Override
                         public void onDownloading(FotaAidlModelInfo fotaModelInfo, float progress) throws RemoteException {
-                            Log.e(TAG, "onDownloading=" + progress + ", modelInfo=" + fotaModelInfo);
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "onDownloading --> progress=" + progress + ", model=" + fotaModelInfo);
+                            }
                             if (mFotaListener != null) {
                                 mFotaListener.onDownloading(fotaModelInfo, progress);
                             }
@@ -58,25 +62,33 @@ public class FotaServiceManager {
 
                         @Override
                         public void onFileDownloadSucceed(FotaAidlModelInfo modelInfo) throws RemoteException {
-                            Log.e(TAG, "onFileDownloadSucceed--modelInfo=" + modelInfo);
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "onFileDownloadSucceed --> model=" + modelInfo);
+                            }
                             if (mFotaListener != null) {
                                 mFotaListener.onFileDownloadSucceed(modelInfo);
                             }
                         }
 
                         @Override
-                        public void onProgress(FotaAidlModelInfo modelInfo, float progress) throws RemoteException {
-                            Log.e(TAG, "onProgress=" + progress + ", modelInfo=" + modelInfo);
+                        public void onInstalling(FotaAidlModelInfo modelInfo, float progress) throws RemoteException {
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "onInstalling --> progress=" + progress + ", model=" + modelInfo);
+                            }
                             if (mFotaListener != null) {
-                                mFotaListener.onProgress(modelInfo, progress);
+                                mFotaListener.onInstalling(modelInfo, progress);
                             }
                         }
                     });
                 } catch (RemoteException e) {
-                    e.printStackTrace();
+                    if (LogManager.isLoggable()) {
+                        LogManager.e(TAG, e.getMessage(), e);
+                    }
                 }
             } else {
-                Log.e(TAG, "fota aidl is null.");
+                if (LogManager.isLoggable()) {
+                    LogManager.e(TAG, "FOTA aidl is null.");
+                }
             }
         }
 
@@ -106,16 +118,22 @@ public class FotaServiceManager {
         Intent serviceIntent = new Intent();
         serviceIntent.setAction("com.autoai.android.action.FotaService");
         context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
-        Log.e(TAG, "bind FotaService");
+        if (LogManager.isLoggable()) {
+            LogManager.e(TAG, "bind FotaService");
+        }
     }
 
     public void unbindService(Context context) {
         if (isBinding && isServiceRun(context, serviceClassName)) {
             context.unbindService(serviceConnection);
             isBinding = false;
-            Log.e(TAG, "unbind FotaService");
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "unbind FotaService");
+            }
         } else {
-            Log.e(TAG, "no fota service");
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "no FOTA service");
+            }
         }
     }
 
@@ -123,11 +141,16 @@ public class FotaServiceManager {
         if (fotaAidl != null) {
             try {
                 fotaAidl.download(models);
+                if (LogManager.isLoggable()) {
+                    LogManager.e(TAG, "download models");
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
-            Log.e(TAG, "fota aidl is null.");
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "FOTA aidl is null.");
+            }
         }
     }
 
@@ -135,16 +158,24 @@ public class FotaServiceManager {
         if (fotaAidl != null) {
             try {
                 fotaAidl.installModels(models);
+                if (LogManager.isLoggable()) {
+                    LogManager.e(TAG, "install models");
+                }
             } catch (RemoteException e) {
                 e.printStackTrace();
             }
         } else {
-            Log.e(TAG, "fota aidl is null.");
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "FOTA aidl is null.");
+            }
         }
     }
 
     public void setListener(FotaListener fotaListener) {
         this.mFotaListener = fotaListener;
+        if (LogManager.isLoggable()) {
+            LogManager.e(TAG, "setListener --> fotaListener=" + fotaListener);
+        }
     }
 
     public interface FotaListener {
@@ -154,7 +185,7 @@ public class FotaServiceManager {
 
         void onFileDownloadSucceed(FotaAidlModelInfo modelInfo);
 
-        void onProgress(FotaAidlModelInfo fotaAidlModelInfo, float progress);
+        void onInstalling(FotaAidlModelInfo fotaAidlModelInfo, float progress);
     }
 
     /**
@@ -173,7 +204,9 @@ public class FotaServiceManager {
         int size = serviceList.size();
         for (int i = 0; i < size; i++) {
             String cn = serviceList.get(i).service.getClassName();
-//            Log.e(TAG, i + ",cn=" + cn + ", className=" + className);
+//            if (LogManager.isLoggable()) {
+//                LogManager.e(TAG, i + ",cn=" + cn + ", className=" + className);
+//            }
             if (cn.equals(className) == true) {
                 isRun = true;
                 break;

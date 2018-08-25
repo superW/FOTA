@@ -2,20 +2,20 @@ package com.autoai.android.fotaapp;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.autoai.android.aidl.FotaAidlModelInfo;
+import com.autoai.android.utils.LogManager;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends Activity {
 
-    private static final String TAG = "FotaAppMainActivity";
+    private static final String TAG = "FotaApp";
 
     private TextView textView;
 
@@ -28,52 +28,57 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = findViewById(R.id.textView);
+        textView = (TextView) findViewById(R.id.textView);
 
         findViewById(R.id.bindBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FotaServiceManager.getInstance().bindService(getApplicationContext());
                 Toast.makeText(getApplicationContext(), "bind service", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "bind service");
+
                 FotaServiceManager.getInstance().setListener(new FotaServiceManager.FotaListener() {
                     @Override
                     public void onUpgrade(List<FotaAidlModelInfo> modelInfos) {
-//                        Log.e(TAG, "onUpgrade--modelInfos=" + modelInfos);
                         fotaAidlModelInfoList = modelInfos;
-                        Log.e(TAG, "copy list to fotaAidlModelInfoList=" + fotaAidlModelInfoList);
+                        if (LogManager.isLoggable()) {
+                            LogManager.e(TAG, "copy list to fotaAidlModelInfoList=" + fotaAidlModelInfoList);
+                        }
 
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                textView.setText("onUpgrade ok, please download all of models.\n");
+                        ArrayList<String> modelList = new ArrayList<String>();
+                        for (FotaAidlModelInfo fotaAidlModelInfo : fotaAidlModelInfoList) {
+                            String name = fotaAidlModelInfo.getModelName();
+                            if (TextUtils.isEmpty(name)) {
+                                name = fotaAidlModelInfo.getUpdateModelTaskInfoList().get(0).getModelName();
                             }
-                        });
+                            modelList.add(name);
+                        }
+                        appendText("可进行下载的model列表" + modelList);
                     }
 
                     @Override
                     public void onDownloading(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
-//                        Log.e(TAG, "onDownloading=" + progress + ", modelInfo=" + fotaAidlModelInfo);
+                        String printProgress = "onDownloading --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress*100);
+                        appendText(printProgress);
+                        if (LogManager.isLoggable()) {
+                            LogManager.e(TAG, "onDownloading --> progress=" + (progress*100) + ", modelInfo=" + fotaAidlModelInfo);
+                        }
                     }
 
                     @Override
                     public void onFileDownloadSucceed(final FotaAidlModelInfo modelInfo) {
-//                        Log.e(TAG, "onFileDownloadSucceed--modelInfo=" + modelInfo);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                textView.append(modelInfo.getModelName() + " can install.\n");
-                            }
-                        });
+                        appendText(modelInfo.getModelName() + "下载完成，等待安装");
                         fotaModelWaiInstallList.add(modelInfo);
                     }
 
                     @Override
-                    public void onProgress(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
-//                        Log.e(TAG, "onProgress=" + progress + ", modelInfo=" + fotaAidlModelInfo);
+                    public void onInstalling(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
+                        String printProgress = "onInstalling --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress*100);
+                        appendText(printProgress);
+                        if (LogManager.isLoggable()) {
+                            LogManager.e(TAG, "onInstalling --> progress=" + (progress*100) + ", modelInfo=" + fotaAidlModelInfo);
+                        }
                     }
                 });
-                Log.e(TAG, "Set Fota Listener");
             }
         });
 
@@ -82,27 +87,22 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 FotaServiceManager.getInstance().unbindService(getApplicationContext());
                 Toast.makeText(getApplicationContext(), "unbind service", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "unbind service");
             }
         });
 
         findViewById(R.id.downloadBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "download models", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "download models");
-
                 FotaServiceManager.getInstance().downloadModels(fotaAidlModelInfoList);
+                Toast.makeText(getApplicationContext(), "download models", Toast.LENGTH_SHORT).show();
             }
         });
 
         findViewById(R.id.installBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "install models", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "install models");
-
                 FotaServiceManager.getInstance().installModels(fotaModelWaiInstallList);
+                Toast.makeText(getApplicationContext(), "install models", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -113,6 +113,34 @@ public class MainActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         FotaServiceManager.getInstance().unbindService(getApplicationContext());
+    }
+
+    /**
+     * TextView显示文字
+     *
+     * @param text
+     */
+    private synchronized void showText(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.setText(text + "\n");
+            }
+        });
+    }
+
+    /**
+     * TextView追加文字
+     *
+     * @param text
+     */
+    private synchronized void appendText(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textView.append(text + "\n");
+            }
+        });
     }
 
 }

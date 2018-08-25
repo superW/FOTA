@@ -14,5 +14,5 @@ interface FotaAidlListener {
     void onFileDownloadSucceed(in FotaAidlModelInfo modelInfo);
 
     // 升级刷写进度
-    void onProgress(in FotaAidlModelInfo modelInfo, float progress);
+    void onInstalling(in FotaAidlModelInfo modelInfo, float progress);
 }

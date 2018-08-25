@@ -6,19 +6,24 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
-import android.util.Log;
+
+import com.autoai.android.fotaframework.utils.LogManager;
 
 public class NetworkChangedReceiver extends BroadcastReceiver {
 
-    private final String TAG = "NetworkChangedReceiver";
+    private final String TAG = "FotaFramework";
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        Log.i(TAG, "网络状态发生变化");
+        if (LogManager.isLoggable()) {
+            LogManager.i(TAG, "NetworkChangedReceiver -- 网络状态发生变化");
+        }
 
         //检测API是不是小于21，因为到了API 21之后getNetworkInfo(int networkType)方法被弃用
         if (android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.LOLLIPOP) {
-            Log.i(TAG, "API level 小于21");
+            if (LogManager.isLoggable()) {
+                LogManager.i(TAG, "NetworkChangedReceiver -- API level 小于21");
+            }
 
             //获得ConnectivityManager对象
             ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -29,20 +34,30 @@ public class NetworkChangedReceiver extends BroadcastReceiver {
             //获取移动数据连接的信息
             NetworkInfo dataNetworkInfo = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             if (wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                Log.i(TAG, "WIFI已连接,移动数据已连接");
+                if (LogManager.isLoggable()) {
+                    LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已连接,移动数据已连接");
+                }
                 setConn(context);
             } else if (wifiNetworkInfo.isConnected() && !dataNetworkInfo.isConnected()) {
-                Log.i(TAG, "WIFI已连接,移动数据已断开");
+                if (LogManager.isLoggable()) {
+                    LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已连接,移动数据已断开");
+                }
                 setConn(context);
             } else if (!wifiNetworkInfo.isConnected() && dataNetworkInfo.isConnected()) {
-                Log.i(TAG, "WIFI已断开,移动数据已连接");
+                if (LogManager.isLoggable()) {
+                    LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已断开,移动数据已连接");
+                }
                 setConn(context);
             } else {
-                Log.i(TAG, "WIFI已断开,移动数据已断开");
+                if (LogManager.isLoggable()) {
+                    LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已断开,移动数据已断开");
+                }
                 setDisConn(context);
             }
         } else {
-            Log.i(TAG, "API level 大于21");
+            if (LogManager.isLoggable()) {
+                LogManager.i(TAG, "NetworkChangedReceiver -- API level 大于21");
+            }
 
             //获得ConnectivityManager对象
             ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -77,19 +92,27 @@ public class NetworkChangedReceiver extends BroadcastReceiver {
             //因为存在上述情况的组合情况，以组合相加的唯一值作为最终状态的判断
             switch (result) {
                 case 0:
-                    Log.i(TAG, "WIFI已断开,移动数据已断开");
+                    if (LogManager.isLoggable()) {
+                        LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已断开,移动数据已断开");
+                    }
                     setDisConn(context);
                     break;
                 case 2:
-                    Log.i(TAG, "WIFI已断开,移动数据已连接");
+                    if (LogManager.isLoggable()) {
+                        LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已断开,移动数据已连接");
+                    }
                     setConn(context);
                     break;
                 case 4:
-                    Log.i(TAG, "WIFI已连接,移动数据已断开");
+                    if (LogManager.isLoggable()) {
+                        LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已连接,移动数据已断开");
+                    }
                     setConn(context);
                     break;
                 case 5:
-                    Log.i(TAG, "WIFI已连接,移动数据已连接");
+                    if (LogManager.isLoggable()) {
+                        LogManager.i(TAG, "NetworkChangedReceiver -- WIFI已连接,移动数据已连接");
+                    }
                     setConn(context);
                     break;
             }
@@ -98,15 +121,15 @@ public class NetworkChangedReceiver extends BroadcastReceiver {
 
     private void setConn(Context context) {
         Intent serviceIntent = getServicentent();
-        serviceIntent.putExtra("method", "setNetState");
-        serviceIntent.putExtra("netState", true);
+        serviceIntent.putExtra(FotaService.METHOD_EXTRA, FotaService.NET_STATE_METHOD);
+        serviceIntent.putExtra(FotaService.NET_STATE_EXTRA, true);
         context.startService(serviceIntent);
     }
 
     private void setDisConn(Context context) {
         Intent serviceIntent = getServicentent();
-        serviceIntent.putExtra("method", "setNetState");
-        serviceIntent.putExtra("netState", false);
+        serviceIntent.putExtra(FotaService.METHOD_EXTRA, FotaService.NET_STATE_METHOD);
+        serviceIntent.putExtra(FotaService.NET_STATE_EXTRA, false);
         context.startService(serviceIntent);
     }
 

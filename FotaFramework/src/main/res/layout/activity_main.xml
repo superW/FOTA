@@ -6,56 +6,88 @@
     android:orientation="vertical"
     tools:context="com.autoai.android.fotaframework.MainActivity">
 
-    <ScrollView
+    <!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="3">-->
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/startServiceBtn"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Start Service" />
+                android:layout_weight="1"
+                android:text="启动服务" />
 
             <Button
                 android:id="@+id/stopServiceBtn"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Stop Service" />
-
-            <Button
-                android:id="@+id/setMobileNetworkDownloadBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="setMobileNetworkDownload"
-                android:visibility="visible" />
-
-            <Button
-                android:id="@+id/setMobileNetworkWaitBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="setMobileNetworkWait"
-                android:visibility="visible" />
-
-            <Button
-                android:id="@+id/reportUpgradeResultBtn"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Completed Report Upgrade Result"
-                android:visibility="visible" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical"
-                android:text="Hello World!" />
+                android:layout_weight="1"
+                android:text="停止服务" />
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/collectModelInfosBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="采集model等信息上报并检查更新"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/setMobileNetworkDownloadBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="移动网络"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/updateTextBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="文本自动刷新" />
+
+            <Button
+                android:id="@+id/rollbackBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="回滚设置" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+    <!--</ScrollView>-->
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            android:text=""
+            android:textIsSelectable="true" />
     </ScrollView>
 
 </LinearLayout>
