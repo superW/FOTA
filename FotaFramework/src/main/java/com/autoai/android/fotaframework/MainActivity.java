@@ -108,7 +108,7 @@ public class MainActivity extends Activity {
         findViewById(R.id.rollbackBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                startActivity(new Intent(MainActivity.this, RollBackActivity.class));
             }
         });
 
@@ -192,6 +192,12 @@ public class MainActivity extends Activity {
                                 LogManager.e(TAG, printModelDownloadProg);
                             }
                         }
+                    } else if (InnerListener.OUT_LOG_ACTION.equals(action)) {
+                        /* 输出日志 */
+                        if (bundle != null) {
+                            String log = bundle.getString(InnerListener.LOG_EXTRA);
+                            appendText(log);
+                        }
                     }
                 }
             }
@@ -243,7 +249,6 @@ public class MainActivity extends Activity {
         Intent serviceIntent = getServicentent();
         startService(serviceIntent);
         appendText("FOTA service started");
-
     }
 
     /**

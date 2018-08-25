@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.os.Message;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.os.SystemClock;
 
 import com.autoai.android.aidl.FotaAidlListener;
 import com.autoai.android.aidl.FotaAidlModelInfo;
@@ -51,12 +52,16 @@ public class FotaService extends Service implements MFOTAListener {
 
     public static final String COLLECT_DEVICE_INFO_METHOD = "collect_device_info_method";
 
+    public static final String ROLLBACK_METHOD = "rollback_method";
+    public static final String ROLLBACK_MODEL_EXTRA = "rollback_model_extra";
+
     private FotaAidlListener fotaAidlListener;
 
     private ThreadPoolManager threadPoolManager;
 
     private MFOTAAPIManager mfotaapiManager;
     private boolean fotaSdkInitResult = false;
+    private boolean isInitOk = false;
 
     private Handler mainHandler;
     private static final int UPDATE_INSTALL_PROGRESS = 1;
@@ -67,6 +72,9 @@ public class FotaService extends Service implements MFOTAListener {
 
     private FOTADeviceInfo mDeviceInfo;
     private List<FOTAModelInfo> mFOTAModelInfoList = new ArrayList<FOTAModelInfo>();
+
+    private long initStartMillis;
+    private long initEndMillis;
 
     public FotaService() {
         if (LogManager.isLoggable()) {
@@ -125,24 +133,35 @@ public class FotaService extends Service implements MFOTAListener {
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "onStartCommand --> " + intent);
         }
-        if (intent != null) {
-            String method = intent.getStringExtra(METHOD_EXTRA);
-            if (method != null) {
-                if (COLLECT_DEVICE_INFO_METHOD.equals(method)) {
-                    if (fotaSdkInitResult) {
-                        collectDeviceInfo();
-                    } else {
-                        if (LogManager.isLoggable()) {
-                            LogManager.e(TAG, "初始化失败，未采集设备model信息");
+        if (isInitOk) {
+            if (intent != null) {
+                String method = intent.getStringExtra(METHOD_EXTRA);
+                if (method != null) {
+                    if (COLLECT_DEVICE_INFO_METHOD.equals(method)) {
+                        if (fotaSdkInitResult) {
+                            collectDeviceInfo();
+                        } else {
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "初始化失败，未采集设备model信息");
+                            }
                         }
+                    } else if (MOBILE_DOWNLOAD_METHOD.equals(method)) {
+                        boolean mobileDownload = intent.getBooleanExtra(MOBILE_DOWNLOAD_EXTRA, false);
+                        setMobileNetworkDownload(mobileDownload);
+                    } else if (NET_STATE_METHOD.equals(method)) {
+                        boolean netState = intent.getBooleanExtra(NET_STATE_EXTRA, false);
+                        setNetState(netState);
+                    } else if (ROLLBACK_METHOD.equals(method)) {
+                        String modelName = intent.getStringExtra(ROLLBACK_MODEL_EXTRA);
+                        rollback(modelName);
                     }
-                } else if (MOBILE_DOWNLOAD_METHOD.equals(method)) {
-                    boolean mobileDownload = intent.getBooleanExtra(MOBILE_DOWNLOAD_EXTRA, false);
-                    setMobileNetworkDownload(mobileDownload);
-                } else if (NET_STATE_METHOD.equals(method)) {
-                    boolean netState = intent.getBooleanExtra(NET_STATE_EXTRA, false);
-                    setNetState(netState);
                 }
+            }
+        } else {
+            if (LogManager.isLoggable()) {
+                String log = "SDK未初始化完成";
+                LogManager.e(TAG, log);
+                outLog(log);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -218,6 +237,14 @@ public class FotaService extends Service implements MFOTAListener {
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "onInitResult --> ");
         }
+        initEndMillis = SystemClock.uptimeMillis();
+        long time = initEndMillis-initStartMillis;
+        if (LogManager.isLoggable()) {
+            String log = "初始化SDK所用时间：" + time + " ms";
+            LogManager.e(TAG, log);
+            outLog(log);
+        }
+        isInitOk = true;
         fotaSdkInitResult = b;
 
         Bundle bundle = new Bundle();
@@ -317,8 +344,14 @@ public class FotaService extends Service implements MFOTAListener {
         threadPoolManager.addExecuteTask(new Runnable() {
             @Override
             public void run() {
+                long b = SystemClock.uptimeMillis();
                 String configInfo = FileUtils.readTxtFile(configTxtFilePath);
                 analysisConfig(configInfo);
+                initStartMillis = SystemClock.uptimeMillis();
+                long time = initStartMillis-b;
+                if (LogManager.isLoggable()) {
+                    LogManager.e(TAG, "读取配置文件并解析所用时间：" + time + " ms");
+                }
                 initSDK();
             }
         });
@@ -462,6 +495,12 @@ public class FotaService extends Service implements MFOTAListener {
         }
     }
 
+    private void rollback(String modelName) {
+        FOTAModelInfo fotaModelInfo = new FOTAModelInfo();
+        fotaModelInfo.setModelName(modelName);
+        mfotaapiManager.setRollBack(fotaModelInfo);
+    }
+
     /**
      * 设置移动网络是否可以下载
      *
@@ -488,6 +527,12 @@ public class FotaService extends Service implements MFOTAListener {
      */
     private void unRigReceiver() {
         unregisterReceiver(networkChangedReceiver);
+    }
+
+    private void outLog(String log) {
+        Bundle bundle = new Bundle();
+        bundle.putString(InnerListener.LOG_EXTRA, log);
+        ListenerManager.getInstance().sendCall(InnerListener.OUT_LOG_ACTION, bundle);
     }
 
 }

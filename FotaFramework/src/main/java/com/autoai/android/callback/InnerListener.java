@@ -19,6 +19,9 @@ public interface InnerListener {
     String DOWNLOADING_MODEL_EXTRA = "downloading_model_extra";
     String DOWNLOADING_PROG_EXTRA = "downloading_prog_extra";
 
+    String OUT_LOG_ACTION = "out_log_action";
+    String LOG_EXTRA = "log_extra";
+
     void onReceive(String action, Bundle bundle);
 
 }
