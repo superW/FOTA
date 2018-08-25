@@ -61,6 +61,7 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
             android:text=""
+            android:fadeScrollbars="false"
             android:textIsSelectable="true"/>
 
     </ScrollView>

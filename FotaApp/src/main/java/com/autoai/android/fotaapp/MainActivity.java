@@ -3,7 +3,9 @@ package com.autoai.android.fotaapp;
 import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,10 +20,13 @@ public class MainActivity extends Activity {
     private static final String TAG = "FotaApp";
 
     private TextView textView;
+    private ScrollView scrollView;
 
     private List<FotaAidlModelInfo> fotaAidlModelInfoList = new ArrayList<FotaAidlModelInfo>();
 
     private List<FotaAidlModelInfo> fotaModelWaiInstallList = new ArrayList<FotaAidlModelInfo>();
+
+    private int lineNum;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +34,8 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         textView = (TextView) findViewById(R.id.textView);
+        scrollView = (ScrollView) findViewById(R.id.scrollView);
+        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         findViewById(R.id.bindBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -138,7 +145,17 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.append(text + "\n");
+                textView.append((++lineNum) + " " + text + "\n");
+            }
+        });
+        scrollToBottom();
+    }
+
+    public void scrollToBottom() {
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.smoothScrollTo(0, textView.getBottom());
             }
         });
     }

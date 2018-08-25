@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -31,10 +32,15 @@ public class MainActivity extends Activity {
     private ScrollView scrollView;
     private Button collectDeviceInfoButton;
     private Button mobileDownloadButton;
+    private Button autoUpdateTextButton;
 
     private boolean isMobileDownload = true;
 
     private boolean sdkInitResult;
+
+    private boolean isAutoUpdateText;
+
+    private int lineNum;
 
     private static boolean isQuit = false;
 
@@ -53,6 +59,7 @@ public class MainActivity extends Activity {
 
         textView = (TextView) findViewById(R.id.textView);
         scrollView = (ScrollView) findViewById(R.id.scrollView);
+        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
 
         findViewById(R.id.startServiceBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,12 +95,15 @@ public class MainActivity extends Activity {
         });
         setMobileDownloadStateBtnText();
 
-        findViewById(R.id.updateTextBtn).setOnClickListener(new View.OnClickListener() {
+        autoUpdateTextButton = (Button) findViewById(R.id.updateTextBtn);
+        autoUpdateTextButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                isAutoUpdateText = !isAutoUpdateText;
+                setAutoUpdateTextBtnText();
             }
         });
+        setAutoUpdateTextBtnText();
 
         findViewById(R.id.rollbackBtn).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -202,6 +212,11 @@ public class MainActivity extends Activity {
         mobileDownloadButton.setText(mobileDownload);
     }
 
+    private void setAutoUpdateTextBtnText() {
+        String auto = "文本自动刷新" + (isAutoUpdateText ? "已开启" : "已关闭");
+        autoUpdateTextButton.setText(auto);
+    }
+
     /**
      * 设置移动网络数据是否可以进行下载
      */
@@ -265,7 +280,19 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                textView.append(text + "\n");
+                textView.append((++lineNum) + " " + text + "\n");
+            }
+        });
+        if (isAutoUpdateText) {
+            scrollToBottom();
+        }
+    }
+
+    public void scrollToBottom() {
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.smoothScrollTo(0, textView.getBottom());
             }
         });
     }
