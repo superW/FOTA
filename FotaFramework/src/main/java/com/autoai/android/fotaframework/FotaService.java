@@ -130,13 +130,19 @@ public class FotaService extends Service implements MFOTAListener {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        /* 首次startService启动服务，会回调两次onStartCommand，原因是注册了网络变化监听 */
         if (LogManager.isLoggable()) {
-            LogManager.e(TAG, "onStartCommand --> " + intent);
+            LogManager.e(TAG, "onStartCommand --> " + intent +
+                    ", flags=" + flags +
+                    ", startId=" + startId);
         }
-        if (isInitOk) {
-            if (intent != null) {
-                String method = intent.getStringExtra(METHOD_EXTRA);
-                if (method != null) {
+        if (intent != null) {
+            String method = intent.getStringExtra(METHOD_EXTRA);
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "onStartCommand --> method=" + method);
+            }
+            if (method != null) {
+                if (isInitOk) {
                     if (COLLECT_DEVICE_INFO_METHOD.equals(method)) {
                         if (fotaSdkInitResult) {
                             collectDeviceInfo();
@@ -155,13 +161,13 @@ public class FotaService extends Service implements MFOTAListener {
                         String modelName = intent.getStringExtra(ROLLBACK_MODEL_EXTRA);
                         rollback(modelName);
                     }
+                } else {
+                    if (LogManager.isLoggable()) {
+                        String log = "SDK未初始化完成";
+                        LogManager.e(TAG, log);
+                        outLog(log);
+                    }
                 }
-            }
-        } else {
-            if (LogManager.isLoggable()) {
-                String log = "SDK未初始化完成";
-                LogManager.e(TAG, log);
-                outLog(log);
             }
         }
         return super.onStartCommand(intent, flags, startId);
@@ -237,14 +243,18 @@ public class FotaService extends Service implements MFOTAListener {
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "onInitResult --> ");
         }
-        initEndMillis = SystemClock.uptimeMillis();
-        long time = initEndMillis-initStartMillis;
-        if (LogManager.isLoggable()) {
+
+        if (!isInitOk) {
+            isInitOk = true;
+            initEndMillis = SystemClock.uptimeMillis();
+            long time = initEndMillis - initStartMillis;
             String log = "初始化SDK所用时间：" + time + " ms";
-            LogManager.e(TAG, log);
             outLog(log);
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, log);
+            }
         }
-        isInitOk = true;
+
         fotaSdkInitResult = b;
 
         Bundle bundle = new Bundle();
@@ -348,7 +358,7 @@ public class FotaService extends Service implements MFOTAListener {
                 String configInfo = FileUtils.readTxtFile(configTxtFilePath);
                 analysisConfig(configInfo);
                 initStartMillis = SystemClock.uptimeMillis();
-                long time = initStartMillis-b;
+                long time = initStartMillis - b;
                 if (LogManager.isLoggable()) {
                     LogManager.e(TAG, "读取配置文件并解析所用时间：" + time + " ms");
                 }
