@@ -15,4 +15,7 @@ interface FotaAidlListener {
 
     // 升级进度
     void onInstalling(in FotaAidlModelInfo modelInfo, float progress);
+
+    // 升级结果
+    void onFinishInstall(in FotaAidlModelInfo modelInfo);
 }

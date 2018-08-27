@@ -75,7 +75,7 @@ public class FotaService extends Service implements MFOTAListener {
 
     private long initStartMillis;
     private long initEndMillis;
-
+    
     public FotaService() {
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "Constructor --> ");
@@ -117,6 +117,9 @@ public class FotaService extends Service implements MFOTAListener {
                                     FOTAModelInfo modelInfo = FotaModelInfoFormater.format(fotaAidlModelInfo);
                                     // 调用SDK上报接口
                                     reportUpgradeResult(modelInfo, true, "{}");
+                                    fotaAidlListener.onFinishInstall(fotaAidlModelInfo);
+                                    String printLog = "安装完成 model=" + fotaAidlModelInfo.getModelName();
+                                    outLog(printLog);
                                 }
                             } catch (RemoteException e) {
                                 e.printStackTrace();
@@ -312,7 +315,10 @@ public class FotaService extends Service implements MFOTAListener {
     public void onDownloadResult(FOTAModelInfo fotaModelInfo, boolean b, String s) {
         // TODO 下载结果（下载文件已经校验过并成功返回结果），可通知应用层进行提示用户进行刷写升级
         if (LogManager.isLoggable()) {
-            LogManager.e(TAG, "onDownloadResult --> " + b + ", result=" + s + ", modelInfo=" + fotaModelInfo);
+            String log = "onDownloadResult --> 下载及文件校验 " +
+                    (b ? ("成功, " + s) : ("失败, failed reason=" + s)) +
+                    ", modelInfo=" + fotaModelInfo;
+            LogManager.e(TAG, log);
         }
 
         SharedPreferencesUtil.SharedPreferencesSave_int(this,
@@ -327,6 +333,10 @@ public class FotaService extends Service implements MFOTAListener {
                 e.printStackTrace();
             }
         }
+
+        String logStr = "onDownloadResult --> model=" + fotaModelInfo.getModelName() + ", 下载及文件校验 " +
+                (b ? ("成功, " + s) : ("失败, failed reason=" + s));
+        outLog(logStr);
     }
 
     @Override

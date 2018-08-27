@@ -79,10 +79,19 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onInstalling(FotaAidlModelInfo fotaAidlModelInfo, float progress) {
-                        String printProgress = "onInstalling --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" + (progress * 100);
+                        String printProgress = "onInstalling --> modelName=" + fotaAidlModelInfo.getModelName() + ", progress=" +  progress;
                         appendText(printProgress);
                         if (LogManager.isLoggable()) {
-                            LogManager.e(TAG, "onInstalling --> progress=" + (progress * 100) + ", modelInfo=" + fotaAidlModelInfo);
+                            LogManager.e(TAG, "onInstalling --> progress=" + progress + ", modelInfo=" + fotaAidlModelInfo);
+                        }
+                    }
+
+                    @Override
+                    public void onFinishInstall(FotaAidlModelInfo fotaAidlModelInfo) {
+                        String printResult = "onFinishInstall --> 安装完成 model=" + fotaAidlModelInfo.getModelName();
+                        appendText(printResult);
+                        if (LogManager.isLoggable()) {
+                            LogManager.e(TAG, "onFinishInstall --> 安装完成 modelInfo=" + fotaAidlModelInfo);
                         }
                     }
                 });

@@ -79,6 +79,16 @@ public class FotaServiceManager {
                                 mFotaListener.onInstalling(modelInfo, progress);
                             }
                         }
+
+                        @Override
+                        public void onFinishInstall(FotaAidlModelInfo modelInfo) throws RemoteException {
+                            if (LogManager.isLoggable()) {
+                                LogManager.e(TAG, "onFinishInstall --> 安装完成 model=" + modelInfo);
+                            }
+                            if (mFotaListener != null) {
+                                mFotaListener.onFinishInstall(modelInfo);
+                            }
+                        }
                     });
                 } catch (RemoteException e) {
                     if (LogManager.isLoggable()) {
@@ -186,6 +196,8 @@ public class FotaServiceManager {
         void onFileDownloadSucceed(FotaAidlModelInfo modelInfo);
 
         void onInstalling(FotaAidlModelInfo fotaAidlModelInfo, float progress);
+
+        void onFinishInstall(FotaAidlModelInfo fotaAidlModelInfo);
     }
 
     /**
