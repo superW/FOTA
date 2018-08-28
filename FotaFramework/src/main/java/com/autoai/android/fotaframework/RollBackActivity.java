@@ -39,6 +39,9 @@ public class RollBackActivity extends Activity {
                 String modelName = modelNameEditText.getText().toString().trim();
                 if (!TextUtils.isEmpty(modelName)) {
                     rollbackModel(modelName);
+                    modelNameEditText.setText("");
+                    appendText(modelName + " 回滚的请求已提交");
+                    showToast("回滚结果在日志中可以看到，日志路径/mnt/sdcrad/autoai/fotadebug/*.log");
                 } else {
                     showToast("啥也不填~逗我玩呢！");
                 }

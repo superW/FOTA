@@ -75,7 +75,7 @@ public class FotaService extends Service implements MFOTAListener {
 
     private long initStartMillis;
     private long initEndMillis;
-    
+
     public FotaService() {
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "Constructor --> ");

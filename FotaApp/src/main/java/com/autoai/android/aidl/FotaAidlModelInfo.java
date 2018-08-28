@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by wangyanchao on 2018/8/8.
+ * Created by wangyanchao on 2018/8/28.
  */
 
 public class FotaAidlModelInfo implements Parcelable {
@@ -160,7 +160,7 @@ public class FotaAidlModelInfo implements Parcelable {
 
     @Override
     public String toString() {
-        return "FOTAModelInfo{" +
+        return "FotaAidlModelInfo{" +
                 "modelID=" + modelID +
                 ", modelName='" + modelName + '\'' +
                 ", modelCurrentVersion=" + modelCurrentVersion +
@@ -214,6 +214,7 @@ public class FotaAidlModelInfo implements Parcelable {
         public static class UpdateRequirement implements Parcelable {
             private long id;//自增ID
             private long taskId;//对应的任务ID
+            private String taskModelName;//对应的任务Name
             private int modelId;
             private String modelName;
             private String requirement;//条件
@@ -244,12 +245,36 @@ public class FotaAidlModelInfo implements Parcelable {
                 this.modelId = modelId;
             }
 
+            /**
+             * 获取升级条件的Model的ModelName
+             * @return 升级条件的Model的ModelName
+             */
             public String getModelName() {
                 return modelName;
             }
 
+            /**
+             *设置升级条件的Model的ModelName
+             * @param modelName 升级条件的Model的ModelName
+             */
             public void setModelName(String modelName) {
                 this.modelName = modelName;
+            }
+
+            /**
+             * 获取对应的ModelName
+             * @return ModelName
+             */
+            public String getTaskModelName() {
+                return taskModelName;
+            }
+
+            /**
+             * 设置对应的ModelName
+             * @param taskModelName 对应的ModelName
+             */
+            public void setTaskModelName(String taskModelName) {
+                this.taskModelName = taskModelName;
             }
 
             /**
@@ -293,6 +318,7 @@ public class FotaAidlModelInfo implements Parcelable {
                 return "UpdateRequirement{" +
                         "id=" + id +
                         ", taskId=" + taskId +
+                        ", taskModelName=" + taskModelName +
                         ", modelId=" + modelId +
                         ", modelName='" + modelName + '\'' +
                         ", requirement='" + requirement + '\'' +
@@ -309,6 +335,7 @@ public class FotaAidlModelInfo implements Parcelable {
             public void writeToParcel(Parcel dest, int flags) {
                 dest.writeLong(this.id);
                 dest.writeLong(this.taskId);
+                dest.writeString(this.taskModelName);
                 dest.writeInt(this.modelId);
                 dest.writeString(this.modelName);
                 dest.writeString(this.requirement);
@@ -321,6 +348,7 @@ public class FotaAidlModelInfo implements Parcelable {
             protected UpdateRequirement(Parcel in) {
                 this.id = in.readLong();
                 this.taskId = in.readLong();
+                this.taskModelName = in.readString();
                 this.modelId = in.readInt();
                 this.modelName = in.readString();
                 this.requirement = in.readString();
@@ -925,6 +953,26 @@ public class FotaAidlModelInfo implements Parcelable {
         private int systemMinVersion;//系统内核符合内核最小要求
         private int systemMaxVersion;//系统内核符合内核最大要求
         private String summary;//简介
+        private int orderNum;//升级序号
+        private String modelName;
+        private int downloadState;//下载状态
+        private int notificationState;//通知状态
+
+        public int getOrderNum() {
+            return orderNum;
+        }
+
+        public void setOrderNum(int orderNum) {
+            this.orderNum = orderNum;
+        }
+
+        public String getModelName() {
+            return modelName;
+        }
+
+        public void setModelName(String modelName) {
+            this.modelName = modelName;
+        }
 
         /**
          * 获得升级包存放位置
@@ -1066,6 +1114,22 @@ public class FotaAidlModelInfo implements Parcelable {
             this.summary = summary;
         }
 
+        public int getDownloadState() {
+            return downloadState;
+        }
+
+        public void setDownloadState(int downloadState) {
+            this.downloadState = downloadState;
+        }
+
+        public int getNotificationState() {
+            return notificationState;
+        }
+
+        public void setNotificationState(int notificationState) {
+            this.notificationState = notificationState;
+        }
+
         @Override
         public String toString() {
             return "UploadInfo{" +
@@ -1077,6 +1141,10 @@ public class FotaAidlModelInfo implements Parcelable {
                     ", systemMinVersion=" + systemMinVersion +
                     ", systemMaxVersion=" + systemMaxVersion +
                     ", summary='" + summary + '\'' +
+                    ", orderNum=" + orderNum +
+                    ", modelName='" + modelName + '\'' +
+                    ", downloadState=" + downloadState +
+                    ", notificationState=" + notificationState +
                     '}';
         }
 
@@ -1095,6 +1163,10 @@ public class FotaAidlModelInfo implements Parcelable {
             dest.writeInt(this.systemMinVersion);
             dest.writeInt(this.systemMaxVersion);
             dest.writeString(this.summary);
+            dest.writeInt(this.orderNum);
+            dest.writeString(this.modelName);
+            dest.writeInt(this.downloadState);
+            dest.writeInt(this.notificationState);
         }
 
         public UploadInfo() {
@@ -1109,6 +1181,10 @@ public class FotaAidlModelInfo implements Parcelable {
             this.systemMinVersion = in.readInt();
             this.systemMaxVersion = in.readInt();
             this.summary = in.readString();
+            this.orderNum = in.readInt();
+            this.modelName = in.readString();
+            this.downloadState = in.readInt();
+            this.notificationState = in.readInt();
         }
 
         public static final Creator<UploadInfo> CREATOR = new Creator<UploadInfo>() {
@@ -1140,21 +1216,6 @@ public class FotaAidlModelInfo implements Parcelable {
         dest.writeList(this.updateModelTaskInfoList);
         dest.writeList(this.uploadInfoList);
     }
-
-//    public void readFromParcel(Parcel dest) {
-//        /* 重写该方法，在aidl中就可以使用 out 或者 inout 来作为它的定向tag了 */
-//        //注意，此处的读值顺序应当是和writeToParcel()方法中一致的
-//        this.id = dest.readLong();
-//        this.modelID = dest.readInt();
-//        this.modelName = dest.readString();
-//        this.modelCurrentVersion = dest.readInt();
-//        this.systemCurrentVersion = dest.readInt();
-//        this.modelUpdateTime = dest.readLong();
-//        this.updateModelTaskInfoList = new ArrayList<UpdateModelTaskInfo>();
-//        dest.readList(this.updateModelTaskInfoList, UpdateModelTaskInfo.class.getClassLoader());
-//        this.uploadInfoList = new ArrayList<UploadInfo>();
-//        dest.readList(this.uploadInfoList, UploadInfo.class.getClassLoader());
-//    }
 
     public FotaAidlModelInfo() {
     }

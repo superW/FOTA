@@ -64,6 +64,7 @@ public class FotaModelInfoFormater {
                         aidlUpdateRequirement.setModelName(updateRequirement.getModelName());
                         aidlUpdateRequirement.setRequirement(updateRequirement.getRequirement());
                         aidlUpdateRequirement.setTaskId(updateRequirement.getTaskId());
+                        aidlUpdateRequirement.setTaskModelName(updateRequirement.getTaskModelName());
                         aidlUpdateRequirement.setVersion(updateRequirement.getVersion());
                         aidlUpdateRequirementList.add(aidlUpdateRequirement);
                     }
@@ -87,6 +88,10 @@ public class FotaModelInfoFormater {
                 aidlUploadInfo.setSystemMinVersion(uploadInfo.getSystemMinVersion());
                 aidlUploadInfo.setUpdateVersion(uploadInfo.getUpdateVersion());
                 aidlUploadInfo.setMustUpdate(uploadInfo.isMustUpdate());
+                aidlUploadInfo.setOrderNum(uploadInfo.getOrderNum());
+                aidlUploadInfo.setModelName(uploadInfo.getModelName());
+                aidlUploadInfo.setDownloadState(uploadInfo.getDownloadState());
+                aidlUploadInfo.setNotificationState(uploadInfo.getNotificationState());
                 aidlUploadInfoList.add(aidlUploadInfo);
             }
             fotaAidlModelInfo.setUploadInfoList(aidlUploadInfoList);
@@ -146,6 +151,7 @@ public class FotaModelInfoFormater {
                         updateRequirement.setModelName(aidlUpdateRequirement.getModelName());
                         updateRequirement.setRequirement(aidlUpdateRequirement.getRequirement());
                         updateRequirement.setTaskId(aidlUpdateRequirement.getTaskId());
+                        updateRequirement.setTaskModelName(aidlUpdateRequirement.getTaskModelName());
                         updateRequirement.setVersion(aidlUpdateRequirement.getVersion());
                         updateRequirementList.add(updateRequirement);
                     }
@@ -169,6 +175,10 @@ public class FotaModelInfoFormater {
                 uploadInfo.setSystemMinVersion(aidlUploadInfo.getSystemMinVersion());
                 uploadInfo.setUpdateVersion(aidlUploadInfo.getUpdateVersion());
                 uploadInfo.setMustUpdate(aidlUploadInfo.isMustUpdate());
+                uploadInfo.setOrderNum(aidlUploadInfo.getOrderNum());
+                uploadInfo.setModelName(aidlUploadInfo.getModelName());
+                uploadInfo.setDownloadState(aidlUploadInfo.getDownloadState());
+                uploadInfo.setNotificationState(aidlUploadInfo.getNotificationState());
                 uploadInfoList.add(uploadInfo);
             }
             fotaModelInfo.setUploadInfoList(uploadInfoList);
