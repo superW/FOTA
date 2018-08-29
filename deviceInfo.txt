@@ -1,0 +1,22 @@
+{
+	"deviceKey":"LGBM00105",
+	"deviceGroupInfo":"11",
+	"deviceType":"maiteng",
+	"modelInfos":[
+		{
+			"modelName":"testModel1",
+			"modelCurrentVersion":10,
+			"systemCurrentVersion":2
+		},
+		{
+			"modelName":"testModel2",
+			"modelCurrentVersion":10,
+			"systemCurrentVersion":2
+		},
+		{
+			"modelName":"testModel3",
+			"modelCurrentVersion":10,
+			"systemCurrentVersion":2
+		}
+	]
+}

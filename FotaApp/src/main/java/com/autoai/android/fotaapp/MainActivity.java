@@ -52,12 +52,17 @@ public class MainActivity extends Activity {
                         }
 
                         ArrayList<String> modelList = new ArrayList<String>();
-                        for (FotaAidlModelInfo fotaAidlModelInfo : fotaAidlModelInfoList) {
-                            String name = fotaAidlModelInfo.getModelName();
-                            if (TextUtils.isEmpty(name)) {
-                                name = fotaAidlModelInfo.getUpdateModelTaskInfoList().get(0).getModelName();
+                        for (int i = 0; i < fotaAidlModelInfoList.size(); i++) {
+                            FotaAidlModelInfo fotaAidlModelInfo = fotaAidlModelInfoList.get(i);
+                            if (fotaAidlModelInfo != null) {
+                                List<FotaAidlModelInfo.UpdateModelTaskInfo> updateModelTaskInfos = fotaAidlModelInfo.getUpdateModelTaskInfoList();
+                                for (FotaAidlModelInfo.UpdateModelTaskInfo updateModelTaskInfo : updateModelTaskInfos) {
+                                    String name = updateModelTaskInfo.getModelName();
+                                    if (TextUtils.isEmpty(name)) {
+                                        modelList.add(name);
+                                    }
+                                }
                             }
-                            modelList.add(name);
                         }
                         appendText("可进行下载的model列表" + modelList);
                     }

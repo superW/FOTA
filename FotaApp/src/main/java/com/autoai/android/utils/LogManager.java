@@ -29,7 +29,7 @@ public final class LogManager {
         return isLoggable;
     }
 
-    public static String debugPath = "/mnt/sdcard/autoai/fotadebug";
+    public static String debugPath = "/mnt/sdcard/autoai/fotaapp/debug";
 
     @SuppressLint("SimpleDateFormat")
     private static SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMddHH");
@@ -95,7 +95,7 @@ public final class LogManager {
                         file.mkdirs();
                     }
 
-                    String logFileName = file.getAbsolutePath() + File.separator + "sdk_ota_msg_" + mSdf.format(System.currentTimeMillis()) + ".log";
+                    String logFileName = file.getAbsolutePath() + File.separator + "msg_" + mSdf.format(System.currentTimeMillis()) + ".log";
                     File logFile = new File(logFileName);
                     if (!logFile.exists()) {
                         //noinspection ResultOfMethodCallIgnored
