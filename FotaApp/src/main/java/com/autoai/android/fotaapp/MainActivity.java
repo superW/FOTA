@@ -58,7 +58,7 @@ public class MainActivity extends Activity {
                                 List<FotaAidlModelInfo.UpdateModelTaskInfo> updateModelTaskInfos = fotaAidlModelInfo.getUpdateModelTaskInfoList();
                                 for (FotaAidlModelInfo.UpdateModelTaskInfo updateModelTaskInfo : updateModelTaskInfos) {
                                     String name = updateModelTaskInfo.getModelName();
-                                    if (TextUtils.isEmpty(name)) {
+                                    if (!TextUtils.isEmpty(name)) {
                                         modelList.add(name);
                                     }
                                 }

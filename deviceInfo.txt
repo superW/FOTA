@@ -9,12 +9,12 @@
 			"systemCurrentVersion":2
 		},
 		{
-			"modelName":"testModel2",
+			"modelName":"sunxi6",
 			"modelCurrentVersion":10,
 			"systemCurrentVersion":2
 		},
 		{
-			"modelName":"testModel3",
+			"modelName":"sunxi7",
 			"modelCurrentVersion":10,
 			"systemCurrentVersion":2
 		}
