@@ -127,6 +127,7 @@ public class FotaServiceManager {
     public void bindService(Context context) {
         Intent serviceIntent = new Intent();
         serviceIntent.setAction("com.autoai.android.action.FotaService");
+        serviceIntent.setPackage("com.autoai.android.fotaframework");
         context.bindService(serviceIntent, serviceConnection, Context.BIND_AUTO_CREATE);
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "bind FotaService");

@@ -67,6 +67,7 @@ public class RollBackActivity extends Activity {
     private Intent getServicentent() {
         Intent serviceIntent = new Intent();
         serviceIntent.setAction("com.autoai.android.action.FotaService");
+        serviceIntent.setPackage("com.autoai.android.fotaframework");
         return serviceIntent;
     }
 
