@@ -11,6 +11,7 @@ import android.os.Message;
 import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import com.autoai.android.aidl.FotaAidlListener;
 import com.autoai.android.aidl.FotaAidlModelInfo;
@@ -198,7 +199,9 @@ public class FotaService extends Service implements MFOTAListener {
         super.onDestroy();
         threadPoolManager.shutdown();
         unRigReceiver();
-        mfotaapiManager.stop();
+        if (mfotaapiManager != null) {
+            mfotaapiManager.stop();
+        }
 
         if (LogManager.isLoggable()) {
             LogManager.e(TAG, "onDestroy --> ");
@@ -383,6 +386,12 @@ public class FotaService extends Service implements MFOTAListener {
      * @param configInfo
      */
     private void analysisConfig(String configInfo) {
+        if (TextUtils.isEmpty(configInfo)) {
+            if (LogManager.isLoggable()) {
+                LogManager.e(TAG, "config file deviceInfo.txt is null.");
+            }
+            return;
+        }
         try {
             JSONObject jo = new JSONObject(configInfo);
 
