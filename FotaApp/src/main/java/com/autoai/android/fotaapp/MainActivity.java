@@ -78,7 +78,14 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onFileDownloadSucceed(final FotaAidlModelInfo modelInfo) {
-                        appendText(modelInfo.getModelName() + "下载完成，等待安装");
+                        if (LogManager.isLoggable()) {
+                            LogManager.e(TAG, "onFileDownloadSucceed --> FotaAidlModelInfo=" + modelInfo);
+                        }
+                        String modelName = modelInfo.getModelName();
+                        if (TextUtils.isEmpty(modelName)) {
+                            modelName = modelInfo.getUploadInfoList().get(0).getModelName();
+                        }
+                        appendText(modelName + "下载完成，等待安装");
                         fotaModelWaiInstallList.add(modelInfo);
                     }
 
