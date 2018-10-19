@@ -1,22 +1,22 @@
 {
-	"deviceKey":"LGBM00105",
+	"deviceKey":"test001",
 	"deviceGroupInfo":"11",
-	"deviceType":"maiteng",
+	"deviceType":"WYCDevice",
 	"modelInfos":[
 		{
-			"modelName":"testModel1",
-			"modelCurrentVersion":10,
-			"systemCurrentVersion":2
+			"modelName":"wenet",
+			"modelCurrentVersion":1,
+			"systemCurrentVersion":23
 		},
 		{
 			"modelName":"sunxi6",
 			"modelCurrentVersion":10,
-			"systemCurrentVersion":2
+			"systemCurrentVersion":23
 		},
 		{
 			"modelName":"sunxi7",
 			"modelCurrentVersion":10,
-			"systemCurrentVersion":2
+			"systemCurrentVersion":23
 		}
 	]
 }

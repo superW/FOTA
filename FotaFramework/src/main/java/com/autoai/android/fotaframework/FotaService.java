@@ -293,6 +293,11 @@ public class FotaService extends Service implements MFOTAListener {
     }
 
     @Override
+    public void onUpload(boolean b, List<FOTAModelInfo> list) {
+
+    }
+
+    @Override
     public void onDownloading(FOTAModelInfo fotaModelInfo, float v) {
         // TODO 下载进度提醒
         if (LogManager.isLoggable()) {

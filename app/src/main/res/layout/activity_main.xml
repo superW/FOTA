@@ -7,13 +7,113 @@
     tools:context="com.autoai.android.fota.MainActivity">
 
 
-    <Button
-        android:id="@+id/button"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startFOTABtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="启动FOTA" />
+
+            <Button
+                android:id="@+id/stopFOTABtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="停止FOTA" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/collectModelInfosBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="采集model等信息上报并检查更新"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/downloadBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="下载model列表" />
+
+            <Button
+                android:id="@+id/installBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="安装model列表" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/setMobileNetworkDownloadBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="移动网络"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/updateTextBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="文本自动刷新" />
+
+            <Button
+                android:id="@+id/rollbackSetBtn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="回滚设置" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/rollbackLL"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <EditText
+                android:id="@+id/modelNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="输入model名" />
+
+            <Button
+                android:id="@+id/rollbackButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="回滚" />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -21,8 +121,10 @@
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fadeScrollbars="false"
             android:scrollbars="vertical"
-            android:text="Hello World!" />
+            android:text=""
+            android:textIsSelectable="true" />
 
     </ScrollView>
 
